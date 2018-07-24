@@ -1,0 +1,199 @@
+cd /home
+
+
+
+wget https://downloadsapachefriends.global.ssl.fastly.net/xampp-files/7.1.8/xampp-linux-x64-7.1.8-0-installer.run?from_af=true
+
+
+
+sudo su
+
+
+
+chmod 755 xampp-linux-x64-7.1.8-0-installer.run?from_af=true
+
+
+
+./xampp-linux-x64-7.1.8-0-installer.run?from_af=true
+
+
+
+cd /opt/lampp
+
+
+
+./lampp start
+
+
+
+cd /home
+
+
+
+wget https://download.owncloud.org/community/owncloud-10.0.8.zip
+
+
+
+cd /opt/lampp/htdocs
+
+
+
+unzip /home/owncloud-10.0.8.zip
+
+
+
+echo -e "Alias /owncloud \"/var/www/owncloud/\"\n\n<Directory /var/www/owncloud/>\nOptions +FollowSymlinks\nAllowOverride All\n\n<IfModule mod_dav.c>\nDav off\n</IfModule>\n\nSetEnv HOME /var/www/owncloud\nSetEnv HTTP_HOME /var/www/owncloud\n\n</directory>" > /opt/lampp/etc/extra/httpd-owncloud.conf
+
+
+
+cat /opt/lampp/etc/extra/httpd-owncloud.conf
+
+
+
+chmod -R 777 /opt/lampp    (o sino -->)      chmod -R ugo+rwx /opt/lampp
+
+
+
+ls -l /opt       (Se ve resaltada la carpeta.)
+
+
+
+(hacer la base de datos)
+
+
+
+cd /home
+
+
+
+apt install mariadb-client-core-10.0
+
+
+cd /opt/lampp/bin
+
+
+
+./mysql -u root mysql
+
+
+
+CREATE DATABASE BASEDATOS;
+
+
+
+CREATE USER dbuser IDENTIFIED BY 'password';
+
+
+
+GRANT USAGE ON *.* TO dbuser@'%' IDENTIFIED BY 'password';
+
+
+
+GRANT ALL PRIVILEGES ON BASEDATOS.* TO dbuser@'%' IDENTIFIED BY 'password';
+
+
+
+FLUSH PRIVILEGES;
+
+
+
+SHOW GRANTS FOR dbuser@'%';     (debera mostrar los grant con el hash del usuario 2row in set)
+
+
+
+\q
+
+
+
+(parte web)
+
+
+
+poner localhost/owncloud
+
+(elegir nombre de admin y password )
+
+
+(cliock en storage y database y seleccionar MARIADB)
+
+
+(en consola poner ifconfig y fijarte la ip de direc.inet: 192.algo)
+
+
+(pones dbuser, luego password, luego BASEDATOS, luego la IP)
+
+
+(click en finish)
+
+
+(se abre la web para ingresar tu admin y paswwor d luego la de guardar archivos y eso)
+
+
+
+
+
+SI TE DA PROBLEMAS DE LOGIN SOLO TENES QUE CAMBIAR LA IP 
+DE DBHOST A LA QUE TENES EN EL MOMENTO EN EL MISMO ARCHIVO CONFIG.PHP
+
+
+
+
+(ahora en consola.)
+
+
+
+poner siendo root
+
+
+cd /opt/lampp/htdocs/owncloud/config
+
+
+
+apt install gedit
+
+
+
+gedit config.php
+
+
+
+(modificar en array agregar 1=> 'DIRECCION IP',)
+
+
+
+EJEMPLO: 
+
+
+
+ 'trusted_domains' =>
+ 
+  array (
+    
+	0 => 'localhost',
+    
+	1 => '192.168.0.26',
+
+   ),
+
+
+
+
+EJEMPLO: 
+
+
+'dbhost' => '192.168.0.28',   ESA IP COMO ES DINAMICA HACES IFCONFIG 
+		
+				TE FIJAS Y SE LA POINES AHI.
+
+				 ENOTCES TE LOGUEAS DE TODOS LADOS.
+
+
+
+
+
+
+ (simpre y cuando sea la misma red de router.)
+
+				para que loguee de todos lados posta tenes qeu dejar prendida la maquina y garpoar un server 
+
+				asi qeu al pedo. octavio es medio rompe pero marcos russo ni bola le da a nada...
